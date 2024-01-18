@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title> Auth callback...</title>
+
+    <body>
+        <h1>Auth callback...</h1>
+
+        <script>
+            new Oidc.UserManager({respose_mode: "querry"}).signinRedirectCallback().then( function () {
+                window.location = "index.html";
+            }).catch(function (e) {
+                console.error(e);
+            })
+        </script>
+    </body>
+</head>
+
+
+
+</html>
