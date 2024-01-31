@@ -48,4 +48,14 @@ public class CarsController {
     private ResponseEntity<Car> updateCar(@PathVariable Integer carId, @RequestBody CarDto carDto){
         return new ResponseEntity<>(carService.updateCar(carId, carDto), HttpStatusCode.valueOf(200));
     }
+
+    @GetMapping("/powerToWeight/{carId}")
+    private ResponseEntity<Double> getPowertoRatiobyId(@PathVariable Integer carId) {
+        Optional<Double> ratio = carService.getPowertoWeightRatio(carId);
+        if (ratio.isEmpty())
+            return new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        else
+            return new ResponseEntity<>(ratio.get(), HttpStatusCode.valueOf(200));
+
+    }
 }

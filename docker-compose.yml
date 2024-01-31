@@ -1,32 +1,6 @@
 version: "3"
 services:
 
-#  postgres:
-#    image: postgres:16.0-alpine3.18
-#    volumes:
-#      - postgres_data_keycloak:/var/lib/postgresql/data
-#    environment:
-#      POSTGRES_DB: keycloak
-#      POSTGRES_USER: keycloak
-#      POSTGRES_PASSWORD: password
-#
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:latest
-#    environment:
-#      DB_VENDOR: POSTGRES
-#      DB_ADDR: postgres
-#      DB_DATABASE: keycloak
-#      DB_USER: keycloak
-#      DB_SCHEMA: public
-#      DB_PASSWORD: password
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: admin
-#    command: ["start-dev", "--http-port=8078"]
-#    ports:
-#      - 8078:8078
-#    depends_on:
-#      - postgres
-
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -57,7 +31,7 @@ services:
   manager:
     image: sheepkiller/kafka-manager
     ports:
-       - 9000:9000
+       - 29000:9000
     environment:
        ZK_HOSTS: zookeeper:2181
     depends_on:
@@ -107,26 +81,35 @@ services:
       - SPRING_DATASOURCE_USERNAME=compose-postgres
       - SPRING_DATASOURCE_PASSWORD=compose-postgres
       - SERVER_PORT=8081
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+    volumes:
+      - C:\users\Mihai\.aws\:/root/.aws:ro
     depends_on:
       - db
       - gateway
       - eureka
       - kafka-server-1
 
-#  rest-api-2:
-#    build: ./rest-service
-#    ports:
-#      - 8082:8081
-#    environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/db
-#      - SPRING_DATASOURCE_USERNAME=compose-postgres
-#      - SPRING_DATASOURCE_PASSWORD=compose-postgres
-#      - SERVER_PORT=8081
-#    depends_on:
-#      - db
-#      - gateway
-#      - eureka
-#      - kafka-server-1
+  rest-api-2:
+    build: ./rest-service
+    ports:
+      - 8082:8081
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/db
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SERVER_PORT=8081
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+    volumes:
+      - C:\users\Mihai\.aws\:/root/.aws:ro
+    depends_on:
+      - db
+      - gateway
+      - eureka
+      - kafka-server-1
+
 
   notification-service:
     build: ./notification-service
